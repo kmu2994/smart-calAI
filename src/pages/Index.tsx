@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, MessageSquare, Brain, Settings, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar, Clock, MessageSquare, Brain, Settings, Plus, ChevronLeft, ChevronRight, Newspaper, StickyNote } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +8,8 @@ import CalendarView from '@/components/CalendarView';
 import AIAssistant from '@/components/AIAssistant';
 import EventCreator from '@/components/EventCreator';
 import SmartSuggestions from '@/components/SmartSuggestions';
+import NewsSection from '@/components/NewsSection';
+import NotesSection from '@/components/NotesSection';
 
 const Index = () => {
   const [currentView, setCurrentView] = useState('calendar');
@@ -126,6 +128,22 @@ const Index = () => {
                 <Plus className="w-4 h-4" />
                 <span className="hidden sm:inline">Create</span>
               </Button>
+              <Button
+                variant={currentView === 'news' ? 'default' : 'ghost'}
+                onClick={() => setCurrentView('news')}
+                className="flex items-center space-x-2"
+              >
+                <Newspaper className="w-4 h-4" />
+                <span className="hidden sm:inline">News</span>
+              </Button>
+              <Button
+                variant={currentView === 'notes' ? 'default' : 'ghost'}
+                onClick={() => setCurrentView('notes')}
+                className="flex items-center space-x-2"
+              >
+                <StickyNote className="w-4 h-4" />
+                <span className="hidden sm:inline">Notes</span>
+              </Button>
             </nav>
           </div>
         </div>
@@ -135,34 +153,36 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-3">
-            {/* Date Navigation */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => navigateDate('prev')}
-                  className="flex items-center space-x-1"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {formatDate(currentDate)}
-                </h2>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => navigateDate('next')}
-                  className="flex items-center space-x-1"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
+            {/* Date Navigation - only show for calendar view */}
+            {currentView === 'calendar' && (
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigateDate('prev')}
+                    className="flex items-center space-x-1"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {formatDate(currentDate)}
+                  </h2>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigateDate('next')}
+                    className="flex items-center space-x-1"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+                <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                  <Brain className="w-3 h-3 mr-1" />
+                  AI Enhanced
+                </Badge>
               </div>
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                <Brain className="w-3 h-3 mr-1" />
-                AI Enhanced
-              </Badge>
-            </div>
+            )}
 
             {/* View Content */}
             <div className="animate-fade-in">
@@ -186,6 +206,8 @@ const Index = () => {
                   currentDate={currentDate}
                 />
               )}
+              {currentView === 'news' && <NewsSection />}
+              {currentView === 'notes' && <NotesSection />}
             </div>
           </div>
 

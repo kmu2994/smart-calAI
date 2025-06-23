@@ -5,8 +5,23 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { MessageSquare, Send, Calendar, Clock, MapPin, Users } from 'lucide-react';
 
+interface Message {
+  id: string;
+  type: 'user' | 'ai';
+  content: string;
+  timestamp: Date;
+  suggestions: string[];
+  eventCreated?: {
+    title: string;
+    start: Date;
+    end: Date;
+    type: string;
+    attendees?: string[];
+  };
+}
+
 const AIAssistant = ({ events, onAddEvent, currentDate }) => {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       type: 'ai',
@@ -92,7 +107,7 @@ const AIAssistant = ({ events, onAddEvent, currentDate }) => {
       response = 'I understand you want help with your calendar. You can ask me to:\n\n• Schedule meetings or events\n• Check your availability\n• Find optimal meeting times\n• Review your upcoming schedule\n\nTry being more specific about what you need!';
     }
     
-    const aiMessage = {
+    const aiMessage: Message = {
       id: Date.now().toString(),
       type: 'ai',
       content: response,
@@ -110,7 +125,7 @@ const AIAssistant = ({ events, onAddEvent, currentDate }) => {
   const handleSend = async () => {
     if (!inputMessage.trim()) return;
     
-    const userMessage = {
+    const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
       content: inputMessage,
