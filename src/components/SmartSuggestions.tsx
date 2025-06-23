@@ -1,270 +1,291 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Lightbulb, Clock, Brain, TrendingUp, Calendar, Coffee, Focus } from 'lucide-react';
+import { Brain, Clock, Users, Zap, Calendar, TrendingUp } from 'lucide-react';
 
 const SmartSuggestions = ({ events, currentDate, onAddEvent }) => {
-  const [suggestions, setSuggestions] = useState([]);
-
-  useEffect(() => {
-    generateSmartSuggestions();
-  }, [events, currentDate]);
-
-  const generateSmartSuggestions = () => {
-    const todayEvents = events.filter(event => 
-      event.start.toDateString() === currentDate.toDateString()
-    );
-
-    const newSuggestions = [];
-
-    // Morning focus time suggestion
-    const morningEvents = todayEvents.filter(event => 
-      event.start.getHours() >= 6 && event.start.getHours() < 12
-    );
-
-    if (morningEvents.length === 0) {
-      newSuggestions.push({
-        id: 'morning-focus',
-        type: 'focus',
-        icon: Focus,
-        title: 'Morning Focus Session',
-        description: 'Block 2 hours for deep work while your energy is high',
-        confidence: 0.92,
-        action: () => {
-          const focusTime = new Date(currentDate);
-          focusTime.setHours(9, 0, 0, 0);
-          const endTime = new Date(focusTime);
-          endTime.setHours(11, 0, 0, 0);
-          
-          onAddEvent({
-            title: 'Deep Work Focus Session',
-            start: focusTime,
-            end: endTime,
-            type: 'personal',
-            description: 'Dedicated time for focused, uninterrupted work'
-          });
-        }
-      });
+  const [suggestions] = useState([
+    {
+      id: '1',
+      type: 'focus-time',
+      title: 'Schedule Focus Time',
+      description: 'You have a 2-hour gap tomorrow. Perfect for deep work!',
+      confidence: 0.92,
+      action: 'Block 2 hours',
+      time: 'Tomorrow 10:00 AM - 12:00 PM',
+      impact: 'High productivity boost'
+    },
+    {
+      id: '2',
+      type: 'meeting-prep',
+      title: 'Meeting Preparation',
+      description: 'Add 15-minute prep time before your 2 PM meeting',
+      confidence: 0.88,
+      action: 'Add prep time',
+      time: 'Today 1:45 PM - 2:00 PM',
+      impact: 'Better meeting outcomes'
+    },
+    {
+      id: '3',
+      type: 'break-time',
+      title: 'Take a Break',
+      description: 'You\'ve been in meetings for 3 hours. Time for a break!',
+      confidence: 0.85,
+      action: 'Schedule 15-min break',
+      time: 'Today 3:00 PM - 3:15 PM',
+      impact: 'Energy restoration'
+    },
+    {
+      id: '4',
+      type: 'follow-up',
+      title: 'Follow-up Reminder',
+      description: 'Schedule follow-up for yesterday\'s product review',
+      confidence: 0.79,
+      action: 'Add follow-up',
+      time: 'This week',
+      impact: 'Maintain momentum'
     }
+  ]);
 
-    // Lunch break suggestion
-    const lunchTimeEvents = todayEvents.filter(event => 
-      event.start.getHours() >= 12 && event.start.getHours() <= 14
-    );
-
-    if (lunchTimeEvents.length === 0) {
-      newSuggestions.push({
-        id: 'lunch-break',
-        type: 'break',
-        icon: Coffee,
-        title: 'Schedule Lunch Break',
-        description: 'Take a proper lunch break to recharge for the afternoon',
-        confidence: 0.87,
-        action: () => {
-          const lunchTime = new Date(currentDate);
-          lunchTime.setHours(12, 30, 0, 0);
-          const endTime = new Date(lunchTime);
-          endTime.setHours(13, 30, 0, 0);
-          
-          onAddEvent({
-            title: 'Lunch Break',
-            start: lunchTime,
-            end: endTime,
-            type: 'personal',
-            description: 'Time to recharge and have a proper meal'
-          });
-        }
-      });
+  const [insights] = useState({
+    productivity: {
+      score: 85,
+      trend: '+5%',
+      description: 'Your productivity is trending upward this week'
+    },
+    timeManagement: {
+      score: 78,
+      trend: '+2%',
+      description: 'Good balance of meetings vs focus time'
+    },
+    suggestions: {
+      implemented: 12,
+      total: 15,
+      percentage: 80
     }
+  });
 
-    // Buffer time suggestion
-    const backToBackMeetings = findBackToBackMeetings(todayEvents);
-    if (backToBackMeetings.length > 0) {
-      newSuggestions.push({
-        id: 'buffer-time',
-        type: 'optimization',
-        icon: Clock,
-        title: 'Add Buffer Time',
-        description: 'You have back-to-back meetings. Consider adding 15-minute buffers',
-        confidence: 0.85,
-        isWarning: true
-      });
+  const getSuggestionIcon = (type) => {
+    switch (type) {
+      case 'focus-time':
+        return <Brain className="w-4 h-4" />;
+      case 'meeting-prep':
+        return <Clock className="w-4 h-4" />;
+      case 'break-time':
+        return <Zap className="w-4 h-4" />;
+      case 'follow-up':
+        return <Users className="w-4 h-4" />;
+      default:
+        return <Calendar className="w-4 h-4" />;
     }
-
-    // Weekly planning suggestion
-    if (currentDate.getDay() === 1) { // Monday
-      newSuggestions.push({
-        id: 'weekly-planning',
-        type: 'planning',
-        icon: TrendingUp,
-        title: 'Weekly Planning Session',
-        description: 'Start your week with a 30-minute planning session',
-        confidence: 0.89,
-        action: () => {
-          const planningTime = new Date(currentDate);
-          planningTime.setHours(8, 30, 0, 0);
-          const endTime = new Date(planningTime);
-          endTime.setHours(9, 0, 0, 0);
-          
-          onAddEvent({
-            title: 'Weekly Planning',
-            start: planningTime,
-            end: endTime,
-            type: 'personal',
-            description: 'Review goals, plan priorities, and organize the week ahead'
-          });
-        }
-      });
-    }
-
-    // End of day wrap-up
-    const eveningEvents = todayEvents.filter(event => 
-      event.start.getHours() >= 17
-    );
-
-    if (eveningEvents.length === 0 && todayEvents.length > 0) {
-      newSuggestions.push({
-        id: 'day-wrap-up',
-        type: 'reflection',
-        icon: Calendar,
-        title: 'Day Wrap-up',
-        description: 'Schedule 15 minutes to review today and plan tomorrow',
-        confidence: 0.83,
-        action: () => {
-          const wrapUpTime = new Date(currentDate);
-          wrapUpTime.setHours(17, 30, 0, 0);
-          const endTime = new Date(wrapUpTime);
-          endTime.setHours(17, 45, 0, 0);
-          
-          onAddEvent({
-            title: 'Day Wrap-up & Tomorrow Planning',
-            start: wrapUpTime,
-            end: endTime,
-            type: 'personal',
-            description: 'Review accomplishments and plan tomorrow\'s priorities'
-          });
-        }
-      });
-    }
-
-    setSuggestions(newSuggestions);
   };
 
-  const findBackToBackMeetings = (events) => {
-    const sortedEvents = events.sort((a, b) => a.start - b.start);
-    const backToBack = [];
-
-    for (let i = 0; i < sortedEvents.length - 1; i++) {
-      const currentEnd = sortedEvents[i].end;
-      const nextStart = sortedEvents[i + 1].start;
-      
-      if (nextStart - currentEnd < 15 * 60 * 1000) { // Less than 15 minutes gap
-        backToBack.push([sortedEvents[i], sortedEvents[i + 1]]);
-      }
+  const getSuggestionColor = (type) => {
+    switch (type) {
+      case 'focus-time':
+        return 'bg-purple-100 text-purple-700 border-purple-200';
+      case 'meeting-prep':
+        return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'break-time':
+        return 'bg-green-100 text-green-700 border-green-200';
+      case 'follow-up':
+        return 'bg-orange-100 text-orange-700 border-orange-200';
+      default:
+        return 'bg-gray-100 text-gray-700 border-gray-200';
     }
-
-    return backToBack;
   };
 
-  const getSuggestionColor = (type, isWarning) => {
-    if (isWarning) return 'bg-yellow-50 border-yellow-200';
-    
-    const colors = {
-      focus: 'bg-blue-50 border-blue-200',
-      break: 'bg-green-50 border-green-200',
-      optimization: 'bg-purple-50 border-purple-200',
-      planning: 'bg-indigo-50 border-indigo-200',
-      reflection: 'bg-orange-50 border-orange-200'
+  const handleApplySuggestion = (suggestion) => {
+    const now = new Date();
+    let eventStart, eventEnd;
+
+    switch (suggestion.type) {
+      case 'focus-time':
+        eventStart = new Date(currentDate);
+        eventStart.setHours(10, 0, 0, 0);
+        eventEnd = new Date(eventStart.getTime() + 2 * 60 * 60 * 1000);
+        break;
+      case 'meeting-prep':
+        eventStart = new Date(currentDate);
+        eventStart.setHours(13, 45, 0, 0);
+        eventEnd = new Date(eventStart.getTime() + 15 * 60 * 1000);
+        break;
+      case 'break-time':
+        eventStart = new Date(currentDate);
+        eventStart.setHours(15, 0, 0, 0);
+        eventEnd = new Date(eventStart.getTime() + 15 * 60 * 1000);
+        break;
+      default:
+        eventStart = new Date(currentDate);
+        eventStart.setHours(16, 0, 0, 0);
+        eventEnd = new Date(eventStart.getTime() + 30 * 60 * 1000);
+    }
+
+    const newEvent = {
+      title: suggestion.title,
+      start: eventStart,
+      end: eventEnd,
+      type: 'personal',
+      description: `AI Suggested: ${suggestion.description}`,
+      aiGenerated: true
     };
-    
-    return colors[type] || 'bg-gray-50 border-gray-200';
-  };
 
-  const getConfidenceColor = (confidence) => {
-    if (confidence >= 0.9) return 'bg-green-100 text-green-700';
-    if (confidence >= 0.8) return 'bg-yellow-100 text-yellow-700';
-    return 'bg-red-100 text-red-700';
+    onAddEvent(newEvent);
   };
 
   return (
-    <Card className="bg-white/60 backdrop-blur-sm border-white/20">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg flex items-center space-x-2">
-          <Lightbulb className="w-5 h-5 text-yellow-500" />
-          <span>Smart Suggestions</span>
-          <Badge variant="outline" className="bg-yellow-50 text-yellow-700">
-            <Brain className="w-3 h-3 mr-1" />
-            AI Powered
-          </Badge>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        {suggestions.length === 0 ? (
-          <div className="text-center py-6 text-gray-500">
-            <Brain className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">No suggestions right now.</p>
-            <p className="text-xs">AI is analyzing your schedule...</p>
+    <div className="space-y-6">
+      {/* AI Insights */}
+      <Card className="bg-white/60 backdrop-blur-sm border-white/20">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg flex items-center space-x-2">
+            <TrendingUp className="w-5 h-5 text-green-600" />
+            <span>AI Insights</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
+              <div className="text-2xl font-bold text-purple-600">{insights.productivity.score}%</div>
+              <div className="text-xs text-gray-600">Productivity</div>
+              <div className="text-xs text-green-600">{insights.productivity.trend}</div>
+            </div>
+            <div className="text-center p-3 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg">
+              <div className="text-2xl font-bold text-blue-600">{insights.timeManagement.score}%</div>
+              <div className="text-xs text-gray-600">Time Mgmt</div>
+              <div className="text-xs text-green-600">{insights.timeManagement.trend}</div>
+            </div>
           </div>
-        ) : (
-          suggestions.map((suggestion) => {
-            const IconComponent = suggestion.icon;
-            return (
-              <div
-                key={suggestion.id}
-                className={`p-3 rounded-lg border ${getSuggestionColor(suggestion.type, suggestion.isWarning)}`}
-              >
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
-                    <IconComponent className="w-4 h-4 text-gray-600" />
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className="text-sm font-medium text-gray-900">
-                        {suggestion.title}
-                      </h4>
-                      <Badge 
-                        variant="outline" 
-                        className={`text-xs ${getConfidenceColor(suggestion.confidence)}`}
-                      >
-                        {Math.round(suggestion.confidence * 100)}%
-                      </Badge>
-                    </div>
-                    
-                    <p className="text-xs text-gray-600 mb-2">
-                      {suggestion.description}
-                    </p>
-                    
-                    {suggestion.action && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={suggestion.action}
-                        className="text-xs h-6 px-2"
-                      >
-                        Add to Calendar
-                      </Button>
-                    )}
-                    
-                    {suggestion.isWarning && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="text-xs h-6 px-2 text-yellow-700 border-yellow-300"
-                      >
-                        Review Schedule
-                      </Button>
-                    )}
-                  </div>
+          
+          <div className="bg-gray-50 rounded-lg p-3">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-gray-700">Suggestions Applied</span>
+              <span className="text-sm text-gray-600">
+                {insights.suggestions.implemented}/{insights.suggestions.total}
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full"
+                style={{ width: `${insights.suggestions.percentage}%` }}
+              ></div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Smart Suggestions */}
+      <Card className="bg-white/60 backdrop-blur-sm border-white/20">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg flex items-center space-x-2">
+            <Brain className="w-5 h-5 text-purple-600" />
+            <span>Smart Suggestions</span>
+            <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+              <Calendar className="w-3 h-3 mr-1" />
+              AI Powered
+            </Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {suggestions.map((suggestion) => (
+            <div
+              key={suggestion.id}
+              className={`p-4 rounded-lg border ${getSuggestionColor(suggestion.type)}`}
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  {getSuggestionIcon(suggestion.type)}
+                  <h4 className="font-medium text-sm">{suggestion.title}</h4>
                 </div>
+                <Badge 
+                  variant="outline" 
+                  className="text-xs"
+                >
+                  {Math.round(suggestion.confidence * 100)}% confidence
+                </Badge>
               </div>
-            );
-          })
-        )}
-      </CardContent>
-    </Card>
+              
+              <p className="text-xs text-gray-600 mb-3">{suggestion.description}</p>
+              
+              <div className="flex items-center justify-between">
+                <div className="text-xs">
+                  <div className="text-gray-500">Time: {suggestion.time}</div>
+                  <div className="text-green-600">Impact: {suggestion.impact}</div>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleApplySuggestion(suggestion)}
+                  className="text-xs"
+                >
+                  {suggestion.action}
+                </Button>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      {/* Quick Actions */}
+      <Card className="bg-white/60 backdrop-blur-sm border-white/20">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg flex items-center space-x-2">
+            <Zap className="w-5 h-5 text-yellow-600" />
+            <span>Quick Optimizations</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full justify-start"
+            onClick={() => {
+              const focusEvent = {
+                title: 'Deep Work Session',
+                start: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000), // Tomorrow
+                end: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000), // 2 hours
+                type: 'personal',
+                description: 'AI-scheduled focus time for maximum productivity'
+              };
+              onAddEvent(focusEvent);
+            }}
+          >
+            <Brain className="w-4 h-4 mr-2" />
+            <span className="text-sm">Schedule Focus Time</span>
+          </Button>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full justify-start"
+            onClick={() => {
+              const breakEvent = {
+                title: 'Wellness Break',
+                start: new Date(currentDate.getTime() + 3 * 60 * 60 * 1000), // 3 hours from now
+                end: new Date(currentDate.getTime() + 3 * 60 * 60 * 1000 + 15 * 60 * 1000), // 15 minutes
+                type: 'personal',
+                description: 'AI-recommended break for optimal performance'
+              };
+              onAddEvent(breakEvent);
+            }}
+          >
+            <Zap className="w-4 h-4 mr-2" />
+            <span className="text-sm">Add Wellness Break</span>
+          </Button>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full justify-start"
+          >
+            <Calendar className="w-4 h-4 mr-2" />
+            <span className="text-sm">Optimize This Week</span>
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

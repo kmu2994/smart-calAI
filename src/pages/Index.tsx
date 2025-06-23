@@ -70,6 +70,19 @@ const Index = () => {
     setCurrentDate(newDate);
   };
 
+  const getTodaysEvents = () => {
+    return events.filter(event => 
+      event.start.toDateString() === currentDate.toDateString()
+    );
+  };
+
+  const getUpcomingEvents = () => {
+    return events
+      .filter(event => event.start >= new Date())
+      .sort((a, b) => a.start.getTime() - b.start.getTime())
+      .slice(0, 3);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Header */}
@@ -78,7 +91,7 @@ const Index = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                <Brain className="w-6 h-6 text-white" />
+                <Calendar className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -189,9 +202,7 @@ const Index = () => {
               <CardContent className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Total Events</span>
-                  <Badge variant="outline">{events.filter(e => 
-                    e.start.toDateString() === currentDate.toDateString()
-                  ).length}</Badge>
+                  <Badge variant="outline">{getTodaysEvents().length}</Badge>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Free Time</span>
@@ -214,30 +225,28 @@ const Index = () => {
             {/* Upcoming Events */}
             <Card className="bg-white/60 backdrop-blur-sm border-white/20">
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg">Upcoming Events</CardTitle>
+                <CardTitle className="text-lg flex items-center space-x-2">
+                  <Calendar className="w-5 h-5 text-purple-600" />
+                  <span>Upcoming Events</span>
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {events
-                  .filter(event => event.start >= new Date())
-                  .sort((a, b) => a.start - b.start)
-                  .slice(0, 3)
-                  .map(event => (
-                    <div key={event.id} className="flex items-center space-x-3 p-2 rounded-lg bg-gray-50/50">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
-                          {event.title}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {event.start.toLocaleTimeString('en-US', { 
-                            hour: 'numeric', 
-                            minute: '2-digit' 
-                          })}
-                        </p>
-                      </div>
+                {getUpcomingEvents().map(event => (
+                  <div key={event.id} className="flex items-center space-x-3 p-2 rounded-lg bg-gray-50/50">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {event.title}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {event.start.toLocaleTimeString('en-US', { 
+                          hour: 'numeric', 
+                          minute: '2-digit' 
+                        })}
+                      </p>
                     </div>
-                  ))
-                }
+                  </div>
+                ))}
               </CardContent>
             </Card>
           </div>
