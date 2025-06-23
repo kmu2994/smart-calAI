@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -118,7 +117,7 @@ const NewsSection = () => {
   return (
     <Card className="bg-white/60 backdrop-blur-sm border-white/20">
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0">
           <CardTitle className="text-lg flex items-center space-x-2">
             <Newspaper className="w-5 h-5 text-orange-600" />
             <span>Today's News</span>
@@ -128,6 +127,7 @@ const NewsSection = () => {
             size="sm"
             onClick={() => fetchNews(selectedCategory)}
             disabled={loading}
+            className="self-start sm:self-auto"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </Button>
@@ -139,7 +139,7 @@ const NewsSection = () => {
             <Badge
               key={category}
               variant={selectedCategory === category ? "default" : "outline"}
-              className="cursor-pointer capitalize"
+              className="cursor-pointer capitalize text-xs sm:text-sm"
               onClick={() => setSelectedCategory(category)}
             >
               {category}
@@ -163,17 +163,17 @@ const NewsSection = () => {
               className="p-3 rounded-lg border bg-white/50 hover:bg-white/70 transition-colors cursor-pointer"
             >
               <div className="flex items-start justify-between mb-2">
-                <h4 className="text-sm font-medium text-gray-900 line-clamp-2 flex-1">
+                <h4 className="text-sm font-medium text-gray-900 line-clamp-2 flex-1 pr-2">
                   {item.title}
                 </h4>
-                <ExternalLink className="w-3 h-3 text-gray-400 ml-2 flex-shrink-0" />
+                <ExternalLink className="w-3 h-3 text-gray-400 flex-shrink-0" />
               </div>
               
               <p className="text-xs text-gray-600 mb-2 line-clamp-2">
                 {item.summary}
               </p>
               
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0">
                 <div className="flex items-center space-x-2">
                   <Badge variant="outline" className={`text-xs ${getCategoryColor(item.category)}`}>
                     {item.category}
