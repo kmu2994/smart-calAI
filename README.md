@@ -1,73 +1,131 @@
-# Welcome to your Lovable project
+🤖 CAL-AI
 
-## Project info
+CAL-AI is a modern, scalable web application built using React, TypeScript, Vite, Tailwind CSS, and shadcn-ui.
+The project is designed for high performance, clean UI, and easy customization.
 
-**URL**: https://lovable.dev/projects/41b46a93-bac6-4857-a82b-25080bad5fb2
+---
 
-## How can I edit this code?
+🔗 Project URL
 
-There are several ways of editing your application.
+- Live Project:
+https://lovable.dev/projects/41b46a93-bac6-4857-a82b-25080bad5fb2
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/41b46a93-bac6-4857-a82b-25080bad5fb2) and start prompting.
+✏️ How to Edit the Project
 
-Changes made via Lovable will be committed automatically to this repo.
+You can edit and maintain this project using any standard frontend development workflow.
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+💻 Edit Locally Using Your IDE
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Prerequisites
 
-Follow these steps:
+- Node.js (v18+ recommended)
+- npm or yarn
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+«Tip: Use "nvm" to manage Node versions easily.»
+
+Steps
+
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Navigate to the project directory
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server
 npm run dev
-```
 
-**Edit a file directly in GitHub**
+The development server supports hot reloading and instant previews.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+📝 Edit Directly on GitHub
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Open the repository.
+2. Navigate to the file you want to edit.
+3. Click the Edit (✏️) icon.
+4. Make changes and commit them.
 
-## What technologies are used for this project?
+Useful for quick fixes and documentation updates.
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+☁️ Use GitHub Codespaces
 
-## How can I deploy this project?
+1. Open the repository.
+2. Click Code → Codespaces → New Codespace.
+3. Edit the project in a cloud-based VS Code environment.
+4. Commit and push your changes when finished.
 
-Simply open [Lovable](https://lovable.dev/projects/41b46a93-bac6-4857-a82b-25080bad5fb2) and click on Share -> Publish.
+No local setup required.
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+🛠️ Tech Stack
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+CAL-AI is built using modern frontend technologies:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- Vite – Fast build tool and development server
+- React – Component-based UI development
+- TypeScript – Type safety and maintainability
+- Tailwind CSS – Utility-first styling
+- shadcn-ui – Reusable and accessible UI components
+
+---
+
+🚀 Deployment
+
+You can deploy CAL-AI on any modern hosting platform such as:
+
+- Vercel
+- Netlify
+- Cloudflare Pages
+- AWS Amplify
+
+Build command:
+
+npm run build
+
+Output directory:
+
+dist
+
+---
+
+🌐 Custom Domain
+
+Custom domains can be configured directly from your hosting provider.
+Follow your provider’s DNS and deployment instructions to link a domain.
+
+---
+
+📌 Notes
+
+- Clean and modular code structure
+- Easy to scale and customize
+- Suitable for production, hackathons, and portfolios
+- Fully responsive and accessible UI
+
+---
+
+📄 License
+
+This project is open for personal and educational use.
+Add a license file if you plan to open-source it.
+
+---
+
+CAL-AI — Built for clarity, speed, and intelligence 🚀
+
+If you want, I can:
+
+- Make it startup-ready
+- Add API documentation
+- Create a CONTRIBUTING.md
+- Optimize it for resume or hackathon submissions
